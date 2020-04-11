@@ -6,6 +6,7 @@ const path = require('path');
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
+const fs = require('fs');
 const util = require(__dirname+'/util');
 //----------
 
@@ -37,12 +38,14 @@ app.use(function(req, res, next) {
     util.log("Request for [" + pathname + "] received.");
 	
 	//-- root path는 liveness, readiness probe임
-	if(pathname === "/") {
-		res.writeHead(200, { 'Content-Type':'text/html; charset=utf-8' });
-		res.write('I am alive');
-		res.end();
-		next();
-		return;
+	if(pathname === "/readiness") {
+		if(fs.existsSync('health/ready.txt')) {
+		  res.writeHead(200, { 'Content-Type':'text/html; charset=utf-8' });
+		  res.write('I am alive');
+		  res.end();
+		  next();
+		  return;
+		}
 	}
 
     //--- Login page로 접근하는 경우는 처리 없이 진행
