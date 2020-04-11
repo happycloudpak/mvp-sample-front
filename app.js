@@ -43,9 +43,11 @@ app.use(function(req, res, next) {
 		  res.writeHead(200, { 'Content-Type':'text/html; charset=utf-8' });
 		  res.write('I am alive');
 		  res.end();
-		  next();
-		  return;
+		} else {
+			res.writeHead(404);
 		}
+		next();
+		return;
 	}
 
     //--- Login page로 접근하는 경우는 처리 없이 진행

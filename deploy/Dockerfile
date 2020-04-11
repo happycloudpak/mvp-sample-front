@@ -1,13 +1,18 @@
-FROM node:alpine
+FROM node:slim
+
+ENV HOME /home/mvp-sample-front
+
 # Add an docker user, make work dir
 RUN adduser --disabled-password --gecos "" docker && \
   echo "docker ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
-  mkdir -p /home/docker/mvp-sample-front && \
-  chown docker:docker /home/docker/mvp-sample-front
+  mkdir -p ${HOME} && \
+  chown docker:docker ${HOME}
 
-WORKDIR /home/docker/mvp-sample-front
+WORKDIR ${HOME}
 
 COPY . ./
+
+RUN chmod -R 777 ./health 
 
 RUN npm install
 
